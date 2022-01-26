@@ -1,11 +1,10 @@
 import { galleryItems } from './gallery-items.js';
-// Change code below this line
 
-const galleryEl = document.querySelector('.gallery');
+const galleryRef = document.querySelector('.gallery');
 
 galleryItems.forEach(image => {
-    const imageWrapper = document.createElement('div');
-    imageWrapper.classList.add('gallery__item');
+    const imageWrapperEl = document.createElement('div');
+    imageWrapperEl.classList.add('gallery__item');
 
     const imageLinkEL = document.createElement('a');
     imageLinkEL.classList.add('gallery__link');
@@ -18,17 +17,23 @@ galleryItems.forEach(image => {
     imageEL.alt = image.description;
 
     imageLinkEL.append(imageEL);
-    imageWrapper.append(imageLinkEL);
-    galleryEl.append(imageWrapper);
+    imageWrapperEl.append(imageLinkEL);
+    galleryRef.append(imageWrapperEl);
 });
 
-const test = (event) => {
+const onImageClick = (event) => {
     event.preventDefault();
+    if (event.target.nodeName !== 'IMG') { 
+        return;
+    }
 
-    let test1 = event.target.dataset.source;
+    const originalImageEl = event.target.dataset.source;
 
-    // console.log(test1);
-    // console.log(event.target);
+    const basicLightboxImage = basicLightbox.create(`
+    <img src="${originalImageEl}" width="800" height="600">
+`);
+    
+    basicLightboxImage.show()
 };
 
-galleryEl.addEventListener('click', test);
+galleryRef.addEventListener('click', onImageClick);
