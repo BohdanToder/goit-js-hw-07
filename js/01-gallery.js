@@ -2,24 +2,24 @@ import { galleryItems } from './gallery-items.js';
 
 const galleryRef = document.querySelector('.gallery');
 
-galleryItems.forEach(image => {
-    const imageWrapperEl = document.createElement('div');
-    imageWrapperEl.classList.add('gallery__item');
+const createImageMarkup = (items) => {
+    return items.map(({ original, preview, description }) => {
+        return `<div class="gallery__item">
+            <a class="gallery__link" href="${original}">
+                <img
+                    class="gallery__image"
+                    src="${preview}"
+                    data-source="${original}"
+                    alt="${description}"
+                />
+            </a>
+        </div>`
+    }).join('');
+};
 
-    const imageLinkEL = document.createElement('a');
-    imageLinkEL.classList.add('gallery__link');
-    imageLinkEL.href = image.original;
+const imageMarkup = createImageMarkup(galleryItems);
 
-    const imageEL = document.createElement('img');
-    imageEL.classList.add('gallery__image');
-    imageEL.src = image.preview;
-    imageEL.dataset.source = image.original;
-    imageEL.alt = image.description;
-
-    imageLinkEL.append(imageEL);
-    imageWrapperEl.append(imageLinkEL);
-    galleryRef.append(imageWrapperEl);
-});
+galleryRef.insertAdjacentHTML('beforeend', imageMarkup);
 
 const onImageClick = (event) => {
     event.preventDefault();
@@ -28,12 +28,13 @@ const onImageClick = (event) => {
     }
 
     const originalImageEl = event.target.dataset.source;
+    const altImageRef = event.target.alt;
 
     const basicLightboxImage = basicLightbox.create(`
-    <img src="${originalImageEl}" width="800" height="600">
+    <img src="${originalImageEl}" alt="${altImageRef}" width="800" height="600">
 `);
     
-    basicLightboxImage.show()
+    basicLightboxImage.show();
 };
 
 galleryRef.addEventListener('click', onImageClick);
